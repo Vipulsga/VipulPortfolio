@@ -1,0 +1,182 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vipul Sharma - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth scrolling for anchor links */
+        html { scroll-behavior: smooth; }
+        /* Hover effect for cards */
+        .card:hover { transform: translateY(-5px); transition: transform 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-700 text-white p-4 sticky top-0 z-10 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Vipul Sharma</h1>
+            <div class="space-x-6">
+                <a href="#about" class="hover:text-blue-200 transition">About</a>
+                <a href="#education" class="hover:text-blue-200 transition">Education</a>
+                <a href="#skills" class="hover:text-blue-200 transition">Skills</a>
+                <a href="#certifications" class="hover:text-blue-200 transition">Certifications</a>
+                <a href="#projects" class="hover:text-blue-200 transition">Projects</a>
+                <a href="#contact" class="hover:text-blue-200 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-24">
+        <div class="container mx-auto text-center">
+            <img src="https://via.placeholder.com/150" alt="Vipul Sharma" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+            <h2 class="text-4xl font-bold mb-4">Vipul Sharma</h2>
+            <p class="text-xl mb-4">BTech Computer Science Engineering Student</p>
+            <p class="max-w-2xl mx-auto text-lg">Passionate first-year Computer Science student at Dev Bhoomi Uttarakhand University, building a strong technical foundation in programming with skills in Python, C, HTML, and CSS. Certified in Digital Marketing and Social Innovation, with hands-on experience in game development. Eager to learn, innovate, and contribute to impactful projects.</p>
+            <div class="mt-6 space-x-4">
+                <a href="[Your LinkedIn Profile URL]" class="inline-block bg-white text-blue-600 px-6 py-2 rounded-full hover:bg-gray-100 transition">LinkedIn Profile</a>
+                <a href="[Your Resume PDF URL]" class="inline-block bg-white text-blue-600 px-6 py-2 rounded-full hover:bg-gray-100 transition">Download Resume</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="container mx-auto py-16">
+        <h2 class="text-3xl font-semibold text-center mb-10">Education</h2>
+        <div class="bg-white p-6 rounded-lg shadow-md card max-w-3xl mx-auto">
+            <h3 class="text-xl font-bold text-blue-700">BTech in Computer Science Engineering</h3>
+            <p class="text-gray-600">Dev Bhoomi Uttarakhand University | 2024 - Present</p>
+            <p class="mt-2 text-gray-700">Currently pursuing a Bachelor’s degree, focusing on programming, algorithms, and software development.</p>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="bg-gray-100 py-16">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-semibold text-center mb-10">Skills</h2>
+            <div class="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Python</span>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">C Programming</span>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">HTML</span>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">CSS</span>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Digital Marketing</span>
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Game Development</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="container mx-auto py-16">
+        <h2 class="text-3xl font-semibold text-center mb-10">Certifications</h2>
+        <div class="space-y-6 max-w-3xl mx-auto">
+            <div class="bg-white p-6 rounded-lg shadow-md card">
+                <h3 class="text-xl font-bold text-blue-700">Fundamentals of Digital Marketing</h3>
+                <p class="text-gray-600">Google | [Year, e.g., 2024]</p>
+                <p class="mt-2 text-gray-700">Mastered core concepts of digital marketing, including SEO, SEM, and social media strategies.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md card">
+                <h3 class="text-xl font-bold text-blue-700">Python and C Programming Basics</h3>
+                <p class="text-gray-600">LearnTube | [Year, e.g., 2024]</p>
+                <p class="mt-2 text-gray-700">Developed foundational skills in Python and C programming through hands-on projects.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md card">
+                <h3 class="text-xl font-bold text-blue-700">Social Innovation & Digital Productivity</h3>
+                <p class="text-gray-600">UNICEF | [Year, e.g., 2024]</p>
+                <p class="mt-2 text-gray-700">Learned strategies for leveraging technology to drive social impact and productivity.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md card">
+                <h3 class="text-xl font-bold text-blue-700">Build Your Own Candy Crush Game</h3>
+                <p class="text-gray-600">Open Weaver | [Year, e.g., 2024]</p>
+                <p class="mt-2 text-gray-700">Completed training to design and develop a game inspired by Candy Crush, enhancing problem-solving and project management skills.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="container mx-auto py-16">
+        <h2 class="text-3xl font-semibold text-center mb-10">Projects</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <div class="bg-white p-6 rounded-lg shadow-md card">
+                <h3 class="text-xl font-bold text-blue-700">Candy Crush Game Clone</h3>
+                <p class="text-gray-600 mt-2">Developed a game inspired by Candy Crush during Open Weaver training, using [Technology, e.g., Python/JavaScript]. Enhanced problem-solving and game logic implementation skills.</p>
+                <a href="[Project URL or Demo Link, if available]" class="text-blue-600 hover:underline mt-2 inline-block">View Project</a>
+            </div>
+            <!-- Add more projects here if applicable -->
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-blue-700 text-white py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-semibold mb-8">Get in Touch</h2>
+            <p class="mb-6 max-w-xl mx-auto">Eager to collaborate on innovative projects or discuss opportunities? Send me a message!</p>
+            <form class="max-w-md mx-auto space-y-4">
+                <input type="text" placeholder="Your Name" class="w-full p-3 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                <input type="email" placeholder="Your Email" class="w-full p-3 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                <textarea placeholder="Your Message" class="w-full p-3 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-300" rows="5" required></textarea>
+                <button type="submit" class="bg-white text-blue-700 px-6 py-3 rounded-full hover:bg-gray-100 transition">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form submission simulation
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! This is a demo, so no data is sent.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
